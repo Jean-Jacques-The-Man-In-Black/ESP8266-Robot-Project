@@ -26,15 +26,11 @@ WiFiServer server(PortNumber);
 WiFiClient client;
 
 ClientHandler clientHandler;
-
+MessageParser messageParser;
 void setup() 
 {
 	//set up pins
 	pinMode(LED_BUILTIN, OUTPUT);
-	pinMode(pinrightspeed, OUTPUT);
-	pinMode(pinrightdirection, OUTPUT);
-	pinMode(pinleftspeed, OUTPUT);
-	pinMode(pinleftdirection, OUTPUT);
 
 
 	//set up serial
@@ -63,6 +59,7 @@ void setup()
 	Serial.println("");
 
 	clientHandler.begin(&server);
+	messageParser.begin();
 }
 
 
@@ -95,12 +92,15 @@ void loop()
 	{
 		if (clientHandler.readMessageBuffer(buffer, bufferLength))
 		{
+			/*
 			Serial.println("Printing Message Buffer:");
 			for (int i = 0; i < bufferLength; ++i)
 			{
-				printCharByteValues(buffer[i]);
+				printCharByteValues(buffer[i])
 			}
-			Serial.println("Done");
+			Serial.println("Done"); 
+			*/
+			messageParser.newMessage(buffer, bufferLength);
 		}
 	}
 

@@ -1,5 +1,4 @@
 #include <ESP8266WiFi.h>
-#include "MessageParser.h"
 #include "ClientHandler.h"
 
 void ClientHandler::begin(WiFiServer *_server)
@@ -27,7 +26,7 @@ bool ClientHandler::updateMessageHandler()
 
 	case AwaitingAction:
 		//More work is needed!
-		isClientConnected();
+		//isClientConnected();
 		break;
 
 	case ReplyingToMessage:
@@ -44,7 +43,7 @@ bool ClientHandler::updateMessageHandler()
 
 bool ClientHandler::readMessageBuffer(char* inputArray, int arrayLength, bool keepBufferFlag)
 {
-	if (hasNewMessage() && (arrayLength > BUFFERSIZE))
+	if (hasNewMessage() && (arrayLength >= BUFFERSIZE))
 	{
 		for (int i = 0; i < BUFFERSIZE; ++i)
 		{
@@ -79,11 +78,9 @@ void ClientHandler::waitingForCommandMessage()
 {
 	while(client.available() > 0)
 	{
-		char temp = client.read();
-		printCharByteValues(temp);
-		if (commandMessageCheck(temp))
+		if (commandMessageCheck(client.read()))
 		{
-			Serial.println("New Message!");
+			//Serial.println("New Message!");
 			readingMessage();
 		}
 	}
@@ -94,15 +91,15 @@ void ClientHandler::readingMessage()
 	while (client.available() > 0)
 	{
 		unsigned char messageByte = client.read();
-		printCharByteValues(messageByte);
 		if (commandMessageCheck(messageByte)) return;
 		buffer[messageCounter] = messageByte;
+		++messageCounter;
 		if ((messageCounter >= messageLength))
 		{
-			Serial.println("End of message!");
+			//Serial.println("End of message!");
 			state = AwaitingAction;
 			break;
-		}
+		}	
 	}
 }
 
