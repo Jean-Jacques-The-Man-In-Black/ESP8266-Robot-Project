@@ -5,8 +5,8 @@
 */
 #include "WifiMotorControl.h"
 
-const char* ssid = "VM796695-2G";
-const char* password = "tfxpdacg";
+const char* ssid = "***";
+const char* password = "***";
 const int PortNumber = 1000;
 
 const size_t bufferLength = 12;	//could be the same thing
